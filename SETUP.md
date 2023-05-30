@@ -23,6 +23,7 @@
 ## npm add express (Express, Mongoose)
 ## npm add mongoose
 ## npm add dotenv
+## npm add cors
 
 # TS configure
 ## tsc --init (tsconfig.json)
