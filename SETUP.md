@@ -32,6 +32,7 @@
 
 # git
 ## git init
+## git add
 ## git commit -m "UM-1"
 ## git branch -M main
 ## git remote add origin git@github.com:siam-asrar/university-mngmt-auth-service.git
