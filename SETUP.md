@@ -15,6 +15,9 @@
 
 # dev dependencies (TS)
 ## npm add -D typescript
+## npm add -D ts-node-dev
+## npm add -D @types/express
+## npm add -D @types/cors
 
 # deps
 ## npm add express (Express, Mongoose)
