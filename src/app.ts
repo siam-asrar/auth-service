@@ -1,9 +1,13 @@
-import express, { Application } from 'express';
+import express, { Application, Request, Response, urlencoded } from 'express';
 import cors from 'cors';
 
 const app: Application = express();
 
-app.get("/", (req, res): void => {
+app.use(cors());
+
+app.use(urlencoded({ extended: true }));
+
+app.get("/", (req: Request, res: Response): void => {
     res.send("Hello World");
 })
 
