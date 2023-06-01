@@ -4,7 +4,8 @@
   "description": "auth service",
   "main": "src/server.ts",
   "scripts": {
-    "start": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "start": "NODE_ENV=production && npm run build",
+    "build": "ts-node-dev --respawn --transpile-only src/server.ts && tsc --watch",
     "lint:check": "eslint --ignore-path .eslintignore --ext .js,.ts .",
     "lint:fix": "eslint . --fix",
     "prettier:check": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
