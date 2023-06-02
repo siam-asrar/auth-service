@@ -16,7 +16,7 @@
   "author": "Siam Asrar",
   "license": "ISC",
   "lint-staged": {
-    "src/**/*.ts": "npm run lint-prettier"
+    "src/**/*.ts": "npx lint-prettier"
   },
   "devDependencies": {
     "@types/cors": "^2.8.13",
