@@ -1,4 +1,8 @@
+
+
 🔑 🔐 🆔 🗝️ Auth Service 🏧 🔒 🔓 🔏
 
-![Alt text](https://i.ibb.co/SXnCmyV/node-mongo-express-ts.png "Express, Mongoose, Rest API")
+
+
+![Alt text](https://i.ibb.co/H21k1NF/node-mongoose-express-ts.webp "Express, Mongoose, Rest API")
 
