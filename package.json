@@ -1,5 +1,5 @@
 {
-  "name": "university-management-auth-service",
+  "name": "auth-service",
   "version": "1.0.0",
   "description": "auth service",
   "main": "src/server.ts",
