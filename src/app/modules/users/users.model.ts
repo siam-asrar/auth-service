@@ -9,8 +9,7 @@ const userSchema = new Schema<IUser, UserModel>(
     role: { type: String, required: true },
     password: { type: String, required: true },
   },
-  // this will set the fields "createdAt" & "updatedAt" by default in Mongo like ObjectId
-  { timestamps: true }
+  { timestamps: true }   // this will set the fields "createdAt" & "updatedAt" by default in Mongo like ObjectId
 )
 
 const User = model<IUser, UserModel>('User', userSchema)
