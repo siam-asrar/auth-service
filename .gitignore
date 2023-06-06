@@ -4,4 +4,6 @@
 
 .env
 
-/logs
+/logs/winston/errors/
+
+/logs/winston/successes/

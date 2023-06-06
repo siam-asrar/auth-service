@@ -1,32 +1,68 @@
 import path from 'path';
-import winston from 'winston';
-/*
-   Write all logs with importance level of `error` or less(`warn`) to `error.log`
-   Write all logs with importance level of `info` or less(`success) to `combined.log`
-*/
-const logger = winston.createLogger({
+import { createLogger, format, transports } from 'winston';
+
+const { combine, timestamp, label, printf } = format;
+
+import DailyRotateFile from 'winston-daily-rotate-file';
+
+
+const logFormat = printf(({ level, message, label, timestamp }) => {
+    const date = new Date(timestamp);
+    const hour = date.getHours()
+    const mins = date.getMinutes()
+    const secs = date.getSeconds();
+    return `${date.toDateString()} ${hour}:${mins}:${secs} [${label}] ${level}: ${message}`;
+});
+
+const logger = createLogger({
     level: 'info',
-    format: winston.format.json(),
-    defaultMeta: { service: 'auth-service' },
+    format: combine(
+        label({ label: 'auth-service' }),
+        timestamp(),
+        logFormat,
+    ),
     transports: [
-        new winston.transports.Console(),
-        new winston.transports.File({
-            filename: path.join(process.cwd(), './logs/winston/error.log'), level: 'success'
-        })
+        new transports.Console(),
+        new DailyRotateFile({
+            filename: path.join(
+                process.cwd(),
+                'logs',
+                'winston',
+                'successes',
+                'auth_service-%DATE%-success.log'
+            ),
+            datePattern: 'YYYY-MM-DD-HH',
+            zippedArchive: true,
+            maxSize: '20m',
+            maxFiles: '14d',
+        }),
     ],
 });
 
-const errorLogger = winston.createLogger({
+const errorLogger = createLogger({
     level: 'error',
-    format: winston.format.json(),
-    defaultMeta: { service: 'auth-service' },
+    format: combine(
+        label({ label: 'auth-service' }),
+        timestamp(),
+        logFormat
+    ),
     transports: [
-        new winston.transports.Console(),
-        new winston.transports.File({
-            filename: path.join(process.cwd(), './logs/winston/error.log'), level: 'error'
+        new transports.Console(),
+        new DailyRotateFile({
+            filename: path.join(
+                process.cwd(),
+                'logs',
+                'winston',
+                'errors',
+                'auth_service-%DATE%-errors.log'
+            ),
+            datePattern: 'YYYY-MM-DD-HH',
+            zippedArchive: true,
+            maxSize: '20m',
+            maxFiles: '14d'
         })
-
     ],
 });
+
 
 export { errorLogger, logger };

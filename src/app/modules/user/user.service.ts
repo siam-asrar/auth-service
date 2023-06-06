@@ -1,11 +1,10 @@
-// only db logics here, no req/res
-
-import User from './users.model'
-import { IUser } from './users.interface'
 import config from '../../../config/index'
-import { generateUserId } from './users.utils'
+import APIError from '../../../errors/ApiError'
+import { IUser } from './user.interface'
+import User from './user.model'
+import { generateUserId } from './user.utils'
 
-/** requisition:
+/** requisition: resides in service :nly db logics here, no req/res
  * auto generated incremental id
  * default pass
  */
@@ -22,12 +21,12 @@ const createUser = async (user: IUser): Promise<IUser | null> => {
   const createdUser = await User.create(user)
 
   if (!createdUser) {
-    throw new Error(`Failed to create new user`)
+    throw new APIError(400, `Failed to create new user`)
   }
 
   return createdUser
 }
 
-export default {
-  createUser,
+export const UserService = {
+  createUser
 }
