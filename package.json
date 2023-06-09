@@ -4,7 +4,7 @@
   "description": "auth service",
   "main": "src/server.ts",
   "scripts": {
-    "start": "NODE_ENV=production && npm run build",
+    "start": "NODE_ENV=development && npm run build",
     "build": "ts-node-dev --respawn --transpile-only src/server.ts && tsc --watch",
     "lint:check": "eslint --ignore-path .eslintignore --ext .js,.ts .",
     "lint:fix": "eslint . --fix",
@@ -35,6 +35,7 @@
     "dotenv": "^16.0.3",
     "eslint": "^8.41.0",
     "express": "^4.18.2",
+    "http-status": "^1.6.2",
     "mongoose": "^7.2.1",
     "winston": "^3.9.0",
     "winston-daily-rotate-file": "^4.7.1",

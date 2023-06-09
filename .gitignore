@@ -1,9 +1,7 @@
 /node_modules
 
-/docs
-
 .env
 
 /logs/winston/errors/
 
-/logs/winston/successes/
+/logs/winston/success/

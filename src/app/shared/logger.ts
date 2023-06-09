@@ -27,8 +27,7 @@ const logger = createLogger({
             filename: path.join(
                 process.cwd(),
                 'logs',
-                'winston',
-                'successes',
+                'success',
                 'auth_service-%DATE%-success.log'
             ),
             datePattern: 'YYYY-MM-DD-HH',
@@ -52,7 +51,6 @@ const errorLogger = createLogger({
             filename: path.join(
                 process.cwd(),
                 'logs',
-                'winston',
                 'errors',
                 'auth_service-%DATE%-errors.log'
             ),

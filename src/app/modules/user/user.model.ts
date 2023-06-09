@@ -3,11 +3,13 @@ import { IUser, UserModel } from './user.interface'
 
 const userSchema = new Schema<IUser, UserModel>(
   {
-    id: { type: String, required: true, unique: true },
-    role: { type: String, required: true },
+    id: { type: String, unique: true },
+    email: { type: String, required: true, unique: true },
+    userName: { type: String, required: true, unique: true },
+    role: { type: String },
     password: { type: String, required: true },
   },
-  { timestamps: true }   // this will set the fields "createdAt" & "updatedAt" by default in Mongo like ObjectId
+  { timestamps: true }
 )
 
 const User = model<IUser, UserModel>('User', userSchema)

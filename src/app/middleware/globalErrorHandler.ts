@@ -1,11 +1,11 @@
 import { ErrorRequestHandler, NextFunction, Request, Response } from "express";
 import { ZodError } from "zod";
-import config from "../../config/index";
-import APIError from "../../errors/ApiError";
-import handleValidationError from "../../errors/handleValidationError";
-import handleZodValidationError from "../../errors/handleZodError";
-import IGenericErrorMessage from "../../interfaces/IGenericErrorMessage";
-import { errorLogger } from "../../shared/logger";
+import config from "../config/index";
+import APIError from "../errors/ApiError";
+import handleValidationError from "../errors/handleValidationError";
+import IGenericErrorMessage from "../interfaces/IGenericErrorMessage";
+import { errorLogger } from "../shared/logger";
+import handleZodValidationError from "./handleZodError";
 
 const globalErrorHandler: ErrorRequestHandler = (err, req: Request, res: Response, next: NextFunction) => {
     if (config.env == 'development') {

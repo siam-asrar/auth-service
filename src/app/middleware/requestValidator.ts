@@ -10,9 +10,9 @@ const requestValidator = (schema: AnyZodObject) =>
                 params: req.params,
                 cookies: req.cookies
             })
-            return next() // to the next middleware
+            return next()
         } catch (err) {
-            next(err) // to global error handle middleware
+            next(err)
         }
     }
 
