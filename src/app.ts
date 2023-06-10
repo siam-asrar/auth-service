@@ -1,6 +1,6 @@
 import cors from 'cors'
-import express, { Application, NextFunction, Request, Response, urlencoded } from 'express'
-import httpStatus from 'http-status'
+import express, { Application, Request, Response, urlencoded } from 'express'
+import notFound from './app/errors/notFoundError'
 import globalErrorHandler from './app/middleware/globalErrorHandler'
 import routes from './app/route/index'
 
@@ -16,17 +16,7 @@ app.use('/api/v1/', routes)
 
 app.use(globalErrorHandler);
 
-app.use((req: Request, res: Response, next: NextFunction) => {
-  res.status(httpStatus.NOT_FOUND).json({
-    success: false,
-    message: 'Not Found',
-    errorMessages: [{
-      path: req.originalUrl,
-      message: 'API not found'
-    }]
-  })
-  next()
-})
+app.use(notFound)
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Connected to 🔐 Service')
