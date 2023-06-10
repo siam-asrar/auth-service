@@ -24,14 +24,15 @@ const getAvailableAuth = catchAsync(async (req: Request, res: Response, next: Ne
     const { limit } = req.query
     const result: IAuth[] | null = await AuthService.availableAuth(parseInt(limit as string | '0'))
 
-    next()
-
     sendResponse(res, {
         success: true,
         message: `Showing ${limit == '0' ? 'all' : limit} Auth`,
         statusCode: httpStatus.OK,
         data: result
     })
+
+    next()
+
 })
 
 const updateSingleAuth = catchAsync(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -55,14 +56,15 @@ const deleteSingleAuth = catchAsync(async (req: Request, res: Response, next: Ne
 
     const result = await AuthService.deleteAuth(_id as unknown as ObjectId)
 
-    next()
-
     sendResponse(res, {
         success: true,
         message: `Auth was successfully deleted!`,
         statusCode: httpStatus.OK,
         data: result
     })
+
+    next()
+
 })
 
 export const AuthController = {
