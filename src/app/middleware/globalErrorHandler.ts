@@ -3,7 +3,7 @@ import { ZodError } from "zod";
 import config from "../config/index";
 import APIError from "../errors/ApiError";
 import handleValidationError from "../errors/handleValidationError";
-import IGenericErrorMessage from "../interfaces/IGenericErrorMessage";
+import IGenericErrorMessage from "../interfaces/error";
 import { errorLogger } from "../shared/logger";
 import handleZodValidationError from "./handleZodError";
 

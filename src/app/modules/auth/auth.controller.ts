@@ -1,7 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
 import { ObjectId } from 'mongoose';
+import { paginationFields } from '../../constants/pagination';
+import { IGenericPaginatedResponse } from '../../interfaces/common';
+import { IPaginationOptions } from '../../interfaces/pagination';
 import catchAsync from '../../shared/catchAsync';
+import pick from '../../shared/pick';
 import sendResponse from '../auth../../../shared/sendResponse';
 import { IAuth } from './auth.interface';
 import { AuthService } from './auth.service';
@@ -21,14 +25,18 @@ const createAuth = catchAsync(async (req: Request, res: Response, next: NextFunc
 })
 
 const getAvailableAuth = catchAsync(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const { limit } = req.query
-    const result: IAuth[] | null = await AuthService.availableAuth(parseInt(limit as string | '0'))
+    const query = req.query
+    const paginationOptions: IPaginationOptions = pick(query, paginationFields)
+
+
+    const result: IGenericPaginatedResponse<IAuth[]> = await AuthService.availableAuth(paginationOptions)
 
     sendResponse(res, {
         success: true,
-        message: `Showing ${limit == '0' ? 'all' : limit} Auth`,
+        message: `Showing ${result?.meta?.limit} of ${result?.meta?.total} Academic Semesters`,
         statusCode: httpStatus.OK,
-        data: result
+        meta: result.meta,
+        data: result.data
     })
 
     next()

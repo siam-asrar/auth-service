@@ -1,6 +1,8 @@
 import httpStatus from 'http-status'
 import { ObjectId } from 'mongoose'
 import APIError from '../../errors/ApiError'
+import { IGenericPaginatedResponse } from '../../interfaces/common'
+import { IPaginationOptions } from '../../interfaces/pagination'
 import { authTitleCodeMapper } from './auth.constants'
 import { IAuth } from './auth.interface'
 import Auth from './auth.model'
@@ -13,9 +15,20 @@ const createdAuth = async (auth: IAuth): Promise<IAuth | null> => {
     return result
 }
 
-const availableAuth = async (limit: number) => {
-    const result = await Auth?.find({}).sort({ year: -1 }).limit(limit)
-    return result
+const availableAuth = async (pagination: IPaginationOptions): Promise<IGenericPaginatedResponse<IAuth[]>> => {
+    const { page = 1, limit = 10 } = pagination
+    const skip = (page - 1) * limit
+    const result = await Auth?.find({}).sort().skip(skip).limit(limit)
+    const total = await Auth.countDocuments()
+
+    return {
+        meta: {
+            page,
+            limit,
+            total
+        },
+        data: result
+    }
 }
 
 const updateAuth = async (_id: ObjectId, auth: IAuth): Promise<object | undefined> => {
