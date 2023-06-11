@@ -1,5 +1,6 @@
 import httpStatus from 'http-status'
-import { ObjectId } from 'mongoose'
+import { ObjectId, SortOrder } from 'mongoose'
+import { paginationHelpers } from '../../../helpers/paginationHelper'
 import APIError from '../../errors/ApiError'
 import { IGenericPaginatedResponse } from '../../interfaces/common'
 import { IPaginationOptions } from '../../interfaces/pagination'
@@ -16,10 +17,14 @@ const createdAuth = async (auth: IAuth): Promise<IAuth | null> => {
 }
 
 const availableAuth = async (pagination: IPaginationOptions): Promise<IGenericPaginatedResponse<IAuth[]>> => {
-    const { page = 1, limit = 10 } = pagination
-    const skip = (page - 1) * limit
-    const result = await Auth?.find({}).sort().skip(skip).limit(limit)
-    const total = await Auth.countDocuments()
+    const { page, limit, skip, sortBy, sortOrder } = paginationHelpers.calculatePagination(pagination)
+    const sortConditions: { [key: string]: SortOrder } = {}
+
+    if (sortBy && sortOrder) {
+        sortConditions[sortBy] = sortOrder
+    }
+    const result = await Auth?.find({}).sort(sortConditions)?.skip(skip)?.limit(limit)
+    const total = await Auth?.countDocuments()
 
     return {
         meta: {
