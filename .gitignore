@@ -1,11 +1,9 @@
 /node_modules
 
-/docs
-
 .env
 
 /logs/winston
 
 /src/app/modules
 
-README
+/docs

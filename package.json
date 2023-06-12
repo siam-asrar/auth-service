@@ -1,7 +1,7 @@
 {
   "name": "auth-service",
   "version": "1.0.0",
-  "description": "auth service",
+  "description": "Auth Service w/ Express, Mongoose & Typescript",
   "main": "src/server.ts",
   "scripts": {
     "start": "NODE_ENV=development && npm run build",
