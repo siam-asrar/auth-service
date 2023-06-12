@@ -1,8 +1,8 @@
 import { Server } from 'http';
 import mongoose from 'mongoose';
 import app from './app';
-import config from './config/index';
-import { errorLogger, logger } from './shared/logger';
+import config from './app/config/index';
+import { errorLogger, logger } from './app/shared/logger';
 
 let server: Server
 
@@ -19,12 +19,11 @@ async function dbConnect() {
       logger.info(`App is listening to port ${config.port}`)
     })
   } catch (err) {
-    logger.error('Failed to connect to DB:', err)
+    errorLogger.error('Failed to connect to DB:', err)
   }
 
   process.on('unhandledRejection', (err) => {
-    errorLogger.error(`App is closed on port ${config.port} due to an unhandled promise rejection`)
-
+    errorLogger.error('App is closed on port ${config.port} due to an unhandled promise rejection')
     if (server) {
       server.close(() => {
         errorLogger.error(err)
@@ -37,3 +36,9 @@ async function dbConnect() {
 
 dbConnect()
 
+process.on('SIGTERM', () => {
+  logger.info('SIGTERM is received');
+  if (server) {
+    server.close();
+  }
+});

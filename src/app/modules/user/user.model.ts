@@ -7,7 +7,12 @@ const userSchema = new Schema<IUser, UserModel>(
     role: { type: String, required: true },
     password: { type: String, required: true },
   },
-  { timestamps: true }   // this will set the fields "createdAt" & "updatedAt" by default in Mongo like ObjectId
+  {
+    timestamps: true,
+    toJSON: {
+      virtuals: true,
+    },
+  }  // this will set the fields "createdAt" & "updatedAt" by default in Mongo like ObjectId
 )
 
 const User = model<IUser, UserModel>('User', userSchema)
