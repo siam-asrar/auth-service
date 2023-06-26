@@ -3,10 +3,6 @@ import express, { Application, Request, Response, urlencoded } from 'express'
 import globalErrorHandler from './app/middleware/globalErrorHandler'
 import router from './app/routes'
 import notFound from './errors/notFoundError'
-<<<<<<< HEAD
-
-=======
->>>>>>> 225da841bb623845ea5b346ffb8599a1efedf922
 
 const app: Application = express()
 
@@ -26,11 +22,4 @@ app.get('/', (req: Request, res: Response): void => {
 
 app.use(notFound)
 
-<<<<<<< HEAD
-// userTest.testFacultyId()
-// userTest.testStudentId()
-// userTest.testAdminId()
-
-=======
->>>>>>> 225da841bb623845ea5b346ffb8599a1efedf922
 export default app
