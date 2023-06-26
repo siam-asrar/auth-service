@@ -4,6 +4,7 @@ import { IUser, UserModel } from './user.interface';
 
 const UserSchema = new Schema<IUser, UserModel>(
   {
+<<<<<<< HEAD
     id: {
       type: String,
       required: true,
@@ -34,14 +35,24 @@ const UserSchema = new Schema<IUser, UserModel>(
       type: Schema.Types.ObjectId,
       ref: 'Admin',
     },
+=======
+    id: { type: String, required: true, unique: true },
+    role: { type: String, required: true },
+    password: { type: String, required: true },
+>>>>>>> 225da841bb623845ea5b346ffb8599a1efedf922
   },
   {
     timestamps: true,
     toJSON: {
       virtuals: true,
     },
+<<<<<<< HEAD
   }
 );
+=======
+  }  // this will set the fields "createdAt" & "updatedAt" by default in Mongo like ObjectId
+)
+>>>>>>> 225da841bb623845ea5b346ffb8599a1efedf922
 
 UserSchema.statics.isUserExist = async function (
   id: string

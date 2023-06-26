@@ -1,8 +1,16 @@
+<<<<<<< HEAD
 import { Server } from 'http'
 import mongoose from 'mongoose'
 import app from './app'
 import config from './config/index'
 import { errorLogger, logger } from './shared/logger'
+=======
+import { Server } from 'http';
+import mongoose from 'mongoose';
+import app from './app';
+import config from './app/config/index';
+import { errorLogger, logger } from './app/shared/logger';
+>>>>>>> 225da841bb623845ea5b346ffb8599a1efedf922
 
 let server: Server
 
@@ -44,4 +52,7 @@ process.on('SIGTERM', () => {
     server.close();
   }
 });
+<<<<<<< HEAD
 
+=======
+>>>>>>> 225da841bb623845ea5b346ffb8599a1efedf922

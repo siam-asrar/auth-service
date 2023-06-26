@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import httpStatus from 'http-status';
 import mongoose from 'mongoose';
 import config from '../../../config/index';
@@ -17,6 +18,23 @@ import {
   generateFacultyId,
   generateStudentId,
 } from './user.utils';
+=======
+import config from '../../config/index'
+import APIError from '../../errors/ApiError'
+import { IUser } from './user.interface'
+import User from './user.model'
+import { generateUserId } from './user.utils'
+
+/** requisition: resides in service :nly db logics here, no req/res
+ * auto generated incremental id
+ * default pass
+ */
+
+const createUser = async (user: IUser): Promise<IUser | null> => {
+  const id = await generateUserId()
+
+  user.id = id
+>>>>>>> 225da841bb623845ea5b346ffb8599a1efedf922
 
 const createStudent = async (
   student: IStudent,
@@ -24,7 +42,11 @@ const createStudent = async (
 ): Promise<IUser | null> => {
   // default password
   if (!user.password) {
+<<<<<<< HEAD
     user.password = config.default_student_pass as string;
+=======
+    user.password = config.default_user_pass as string // default type alias
+>>>>>>> 225da841bb623845ea5b346ffb8599a1efedf922
   }
 
   // set role

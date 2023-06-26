@@ -6,6 +6,7 @@ import sendResponse from '../../../shared/sendResponse';
 import { IUser } from './user.interface';
 import { UserService } from './user.service';
 
+<<<<<<< HEAD
 const createStudent: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
     const { student, ...userData } = req.body;
@@ -19,12 +20,22 @@ const createStudent: RequestHandler = catchAsync(
     });
   }
 );
+=======
+const createUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  /** req & response: resides in controller
+    * req params
+    * res details
+   */
+  const user = req.body
+  const result = await UserService.createUser(user)
+>>>>>>> 225da841bb623845ea5b346ffb8599a1efedf922
 
 const createFaculty: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
     const { faculty, ...userData } = req.body;
     const result = await UserService.createFaculty(faculty, userData);
 
+<<<<<<< HEAD
     sendResponse<IUser>(res, {
       statusCode: httpStatus.OK,
       success: true,
@@ -47,6 +58,10 @@ const createAdmin: RequestHandler = catchAsync(
     });
   }
 );
+=======
+  next()
+})
+>>>>>>> 225da841bb623845ea5b346ffb8599a1efedf922
 
 export const UserController = {
   createStudent,

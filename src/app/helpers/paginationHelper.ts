@@ -1,4 +1,8 @@
+<<<<<<< HEAD:src/helpers/paginationHelper.ts
 import { SortOrder } from 'mongoose';
+=======
+import { IPaginationOptionResults, IPaginationOptions } from "../interfaces/pagination";
+>>>>>>> 225da841bb623845ea5b346ffb8599a1efedf922:src/app/helpers/paginationHelper.ts
 
 type IOptions = {
   page?: number;

@@ -5,6 +5,7 @@ import { IFaculty } from '../faculty/faculty.interface';
 import { IStudent } from '../student/student.interface';
 
 export type IUser = {
+<<<<<<< HEAD
   id: string;
   role: string;
   password: string;
@@ -13,6 +14,12 @@ export type IUser = {
   faculty?: Types.ObjectId | IFaculty;
   admin?: Types.ObjectId | IAdmin;
 };
+=======
+  id: string
+  role: string
+  password: string
+}
+>>>>>>> 225da841bb623845ea5b346ffb8599a1efedf922
 
 // export type IUserMethods = {
 //   isUserExist(id: string): Promise<Partial<IUser> | null>;
