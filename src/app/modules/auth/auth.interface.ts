@@ -1,19 +1,21 @@
-import { Model } from "mongoose";
+import { ENUM_USER_ROLE } from '../../../enums/user';
 
-export type IAuthTitle =
-    | 'Generic'
-    | 'Staff'
-    | 'Admin'
+export type ILoginUser = {
+  id: string;
+  password: string;
+};
 
-export type IAuthCode =
-    | '01'
-    | '02'
-    | '03'
+export type ILoginUserResponse = {
+  accessToken: string;
+  refreshToken?: string;
+  needsPasswordChange: boolean;
+};
 
-export type IAuth = {
-    title: IAuthTitle;
-    code: IAuthCode;
-    userId?: number;
-}
+export type IRefreshTokenResponse = {
+  accessToken: string;
+};
 
-export type AuthModel = Model<IAuth, Record<string, unknown>>
+export type IVerifiedLoginUser = {
+  userId: string;
+  role: ENUM_USER_ROLE;
+};

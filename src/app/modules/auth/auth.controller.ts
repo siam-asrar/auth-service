@@ -1,83 +1,55 @@
-import { NextFunction, Request, Response } from 'express';
-import httpStatus from 'http-status';
-import { ObjectId } from 'mongoose';
-import { paginationFields } from '../../constants/pagination';
-import { IGenericPaginatedResponse } from '../../interfaces/common';
-import { IPaginationOptions } from '../../interfaces/pagination';
-import catchAsync from '../../shared/catchAsync';
-import pick from '../../shared/pick';
-import sendResponse from '../auth../../../shared/sendResponse';
-import { IAuth } from './auth.interface';
+import { Request, Response } from 'express';
+import config from '../../../config';
+import catchAsync from '../../../shared/catchAsync';
+import sendResponse from '../../../shared/sendResponse';
+import { ILoginUserResponse, IRefreshTokenResponse } from './auth.interface';
 import { AuthService } from './auth.service';
 
-const createAuth = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const { ...Auth } = req.body
-    const result = await AuthService.createdAuth(Auth)
+const loginUser = catchAsync(async (req: Request, res: Response) => {
+  const { ...loginData } = req.body;
+  const result = await AuthService.loginUser(loginData);
+  const { refreshToken, ...others } = result;
 
-    next()
+  // set refresh token into cookie
 
-    sendResponse(res, {
-        success: true,
-        message: 'Auth created successfully!',
-        statusCode: httpStatus.OK,
-        data: result
-    })
-})
+  const cookieOptions = {
+    secure: config.env === 'production',
+    httpOnly: true,
+  };
 
-const getAvailableAuth = catchAsync(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const query = req.query
-    const paginationOptions: IPaginationOptions = pick(query, paginationFields)
+  res.cookie('refreshToken', refreshToken, cookieOptions);
 
+  sendResponse<ILoginUserResponse>(res, {
+    statusCode: 200,
+    success: true,
+    message: 'User lohggedin successfully !',
+    data: others,
+  });
+});
 
-    const result: IGenericPaginatedResponse<IAuth[]> = await AuthService.availableAuth(paginationOptions)
+const refreshToken = catchAsync(async (req: Request, res: Response) => {
+  const { refreshToken } = req.cookies;
 
-    sendResponse(res, {
-        success: true,
-        message: `Showing ${result?.meta?.limit} of ${result?.meta?.total} Academic Semesters`,
-        statusCode: httpStatus.OK,
-        meta: result.meta,
-        data: result.data
-    })
+  const result = await AuthService.refreshToken(refreshToken);
 
-    next()
+  // set refresh token into cookie
 
-})
+  const cookieOptions = {
+    secure: config.env === 'production',
+    httpOnly: true,
+  };
 
-const updateSingleAuth = catchAsync(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const { _id } = req.params
-    const { ...payload } = req.body
+  res.cookie('refreshToken', refreshToken, cookieOptions);
 
-    const result = await AuthService.updateAuth(_id as unknown as ObjectId, payload)
-
-    next()
-
-    sendResponse(res, {
-        success: true,
-        message: `Auth ${_id} successfully updated!`,
-        statusCode: httpStatus.OK,
-        data: result
-    })
-})
-
-const deleteSingleAuth = catchAsync(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const { _id } = req.params
-
-    const result = await AuthService.deleteAuth(_id as unknown as ObjectId)
-
-    sendResponse(res, {
-        success: true,
-        message: `Auth was successfully deleted!`,
-        statusCode: httpStatus.OK,
-        data: result
-    })
-
-    next()
-
-})
+  sendResponse<IRefreshTokenResponse>(res, {
+    statusCode: 200,
+    success: true,
+    message: 'User lohggedin successfully !',
+    data: result,
+  });
+});
 
 export const AuthController = {
-    getAvailableAuth,
-    createAuth,
-    updateSingleAuth,
-    deleteSingleAuth
-}
+  loginUser,
+  refreshToken,
+};

@@ -1,30 +1,25 @@
-import { z } from "zod"
-import { authCode, authTitle } from "./auth.constants"
+import { z } from 'zod';
 
-const createAuthZodSchema = z.object({
-    body: z.object({
-        title: z.enum(
-            [...authTitle] as [string, ...string[]
-            ], { required_error: 'Title is required' }
-        ),
-        code: z.enum(
-            [...authCode] as [string, ...string[]
-            ], { required_error: 'Code is required' }
-        ),
-        userId: z.number().optional()
-    })
-})
+const loginZodSchema = z.object({
+  body: z.object({
+    id: z.string({
+      required_error: 'ID is required',
+    }),
+    password: z.string({
+      required_error: 'Password is required',
+    }),
+  }),
+});
 
-const deleteOrUpdateAuthZodSchema = z.object({
-    params: z.object({
-        _id: z.string()
-    }, {
-        required_error: 'Object Id is required'
-    }
-    )
-})
+const refreshTokenZodSchema = z.object({
+  cookies: z.object({
+    refreshToken: z.string({
+      required_error: 'Refresh Token is required',
+    }),
+  }),
+});
 
 export const AuthValidation = {
-    createAuthZodSchema,
-    deleteOrUpdateAuthZodSchema
-}
+  loginZodSchema,
+  refreshTokenZodSchema,
+};

@@ -1,65 +1,96 @@
-import httpStatus from 'http-status'
-import { ObjectId, SortOrder } from 'mongoose'
-import { paginationHelpers } from '../../../helpers/paginationHelper'
-import APIError from '../../errors/ApiError'
-import { IGenericPaginatedResponse } from '../../interfaces/common'
-import { IPaginationOptions } from '../../interfaces/pagination'
-import { authTitleCodeMapper } from './auth.constants'
-import { IAuth } from './auth.interface'
-import Auth from './auth.model'
+import httpStatus from 'http-status';
+import { Secret } from 'jsonwebtoken';
+import config from '../../../config';
+import ApiError from '../../../errors/ApiError';
+import { jwtHelpers } from '../../../helpers/jwtHelpers';
+import { User } from '../user/user.model';
+import {
+  ILoginUser,
+  ILoginUserResponse,
+  IRefreshTokenResponse,
+} from './auth.interface';
 
-const createdAuth = async (auth: IAuth): Promise<IAuth | null> => {
-    if (authTitleCodeMapper[auth.title] !== auth.code) {
-        throw new APIError(httpStatus.BAD_REQUEST, 'Failed to create new Auth due to mismatching params')
-    }
-    const result = await Auth.create(auth)
-    return result
-}
+const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
+  const { id, password } = payload;
+  // creating instance of User
+  // const user = new User();
+  //  // access to our instance methods
+  //   const isUserExist = await user.isUserExist(id);
 
-const availableAuth = async (pagination: IPaginationOptions): Promise<IGenericPaginatedResponse<IAuth[]>> => {
-    const { page, limit, skip, sortBy, sortOrder } = paginationHelpers.calculatePagination(pagination)
-    const sortConditions: { [key: string]: SortOrder } = {}
+  const isUserExist = await User.isUserExist(id);
 
-    if (sortBy && sortOrder) {
-        sortConditions[sortBy] = sortOrder
-    }
-    const result = await Auth?.find({}).sort(sortConditions)?.skip(skip)?.limit(limit)
-    const total = await Auth?.countDocuments()
+  if (!isUserExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
+  }
 
-    return {
-        meta: {
-            page,
-            limit,
-            total
-        },
-        data: result
-    }
-}
+  if (
+    isUserExist.password &&
+    !(await User.isPasswordMatched(password, isUserExist.password))
+  ) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Password is incorrect');
+  }
 
-const updateAuth = async (_id: ObjectId, auth: IAuth): Promise<object | undefined> => {
-    const result = await Auth?.updateOne(_id, auth)
-    if (result.modifiedCount) {
-        const data = await Auth?.findOne(_id)
-        return { result: data, data: result }
-    } else {
-        throw new APIError(httpStatus.BAD_REQUEST, `Failed to update Auth by ${_id} due to bad params`)
-    }
-}
+  //create access token & refresh token
 
-const deleteAuth = async (_id: ObjectId): Promise<object | undefined> => {
-    const result = await Auth?.deleteOne(_id)
-    if (result.deletedCount) {
-        const data = await Auth?.find({})
-        return { result, data }
-    } else {
-        throw new APIError(httpStatus.BAD_REQUEST, `Failed to update Auth by ${_id} due to bad params`)
-    }
-}
+  const { id: userId, role, needsPasswordChange } = isUserExist;
+  const accessToken = jwtHelpers.createToken(
+    { userId, role },
+    config.jwt.secret as Secret,
+    config.jwt.expires_in as string
+  );
+
+  const refreshToken = jwtHelpers.createToken(
+    { userId, role },
+    config.jwt.refresh_secret as Secret,
+    config.jwt.refresh_expires_in as string
+  );
+
+  return {
+    accessToken,
+    refreshToken,
+    needsPasswordChange,
+  };
+};
+
+const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
+  //verify token
+  // invalid token - synchronous
+  let verifiedToken = null;
+  try {
+    verifiedToken = jwtHelpers.verifyToken(
+      token,
+      config.jwt.refresh_secret as Secret
+    );
+  } catch (err) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Invalid Refresh Token');
+  }
+
+  const { userId } = verifiedToken;
+
+  // tumi delete hye gso  kintu tumar refresh token ase
+  // checking deleted user's refresh token
+
+  const isUserExist = await User.isUserExist(userId);
+  if (!isUserExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
+  }
+  //generate new token
+
+  const newAccessToken = jwtHelpers.createToken(
+    {
+      id: isUserExist.id,
+      role: isUserExist.role,
+    },
+    config.jwt.secret as Secret,
+    config.jwt.expires_in as string
+  );
+
+  return {
+    accessToken: newAccessToken,
+  };
+};
 
 export const AuthService = {
-    availableAuth,
-    createdAuth,
-    updateAuth,
-    deleteAuth
-}
-
+  loginUser,
+  refreshToken,
+};

@@ -1,38 +1,29 @@
-import express from 'express'
-import requestValidator from '../../middleware/requestValidator'
-import { AuthController } from './auth.controller'
-import { AuthValidation } from './auth.validation'
+import express from 'express';
+import requestValidator from '../../middleware/requestValidator';
+import { AuthController } from './auth.controller';
+import { AuthValidation } from './auth.validation';
+const router = express.Router();
 
-const router = express.Router()
+router.post(
+  '/login',
+  requestValidator(AuthValidation.loginZodSchema),
+  AuthController.loginUser
+);
 
-router
-    .get('/',
-        AuthController
-            .getAvailableAuth
-    )
-    .post('/',
-        requestValidator(
-            AuthValidation
-                .createAuthZodSchema
-        ),
-        AuthController
-            .createAuth
-    )
-    .patch('/:_id',
-        requestValidator(
-            AuthValidation
-                .deleteOrUpdateAuthZodSchema
-        ),
-        AuthController
-            .updateSingleAuth
-    )
-    .delete('/:_id',
-        requestValidator(
-            AuthValidation
-                .deleteOrUpdateAuthZodSchema
-        ),
-        AuthController
-            .deleteSingleAuth
-    )
+router.post(
+  '/refresh-token',
+  requestValidator(AuthValidation.refreshTokenZodSchema),
+  AuthController.refreshToken
+);
 
-export const AuthRoutes = router
+// router.get('/', AdminController.getAllAdmins);
+
+// router.delete('/:id', AdminController.deleteAdmin);
+
+// router.patch(
+//   '/:id',
+//   requestValidator(AdminValidation.updateAdmin),
+//   AdminController.updateAdmin
+// );
+
+export const AuthRoutes = router;

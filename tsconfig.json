@@ -1,6 +1,7 @@
 {
   "include": [
-    "src"
+    "src",
+    "src/app/modules/academicFaculty/academicFaculty.constant.ts"
   ], // which files to compile
   "exclude": [
     "node_modules"

@@ -2,6 +2,10 @@
 
 .env
 
-/logs/success/.
+/logs/winston
 
-/logs/errors/.
+/docs
+
+/dist
+
+src/app/modules
