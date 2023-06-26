@@ -2,7 +2,7 @@
 
 ---
 
-![Alt text](https://i.ibb.co/H21k1NF/node-mongoose-express-ts.webp "Express, Mongoose, Rest API")
+![Alt text](assets/node-mongoose-express-ts.webp "Express, Mongoose, Rest API")
 
 ---
 
@@ -12,7 +12,7 @@
 
 ---
 
-### Add an .env file in the root dir and add the following:
+### Add a .env file in the root dir and add the following:
 
 * NODE_ENV = |development|production|
 
